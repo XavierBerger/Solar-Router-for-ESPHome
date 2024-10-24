@@ -6,7 +6,7 @@ sensor:
   # Sensor showing the actual power consumption
   - id: real_power
     platform: template
-    name: "Real Power"
+    name: "${name} Real Power"
     device_class: "power"
     unit_of_measurement: "W"
     update_interval: 1s

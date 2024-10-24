@@ -12,7 +12,7 @@ switch:
   # Define is router is active or not
   # When switch is ON, pooling timer will trigger every seconds
   - platform: template
-    name: "Activate Solar Routing"
+    name: "${name} Activate Solar Routing"
     optimistic: true
     restore_mode: ALWAYS_OFF
     id: activate
@@ -36,7 +36,7 @@ number:
   #   immadiatelly be corrected by the solar router. It is advised to not use the slider
   #   when the router is activated.
   - platform: template
-    name: "Regulator Opening"
+    name: "${name} Regulator Opening"
     id: regulator_opening
     min_value: 0
     max_value: 100
@@ -66,7 +66,7 @@ number:
 
   # Define the reactivity of regulator opening
   - platform: template
-    name: "Reactivity"
+    name: "${name} Reactivity"
     id: reactivity
     optimistic: True
     restore_value: True
@@ -82,7 +82,7 @@ number:
   #  <0 : continue the send energy to the grid
   #  >0 : pull energy from the grid to better confort
   - platform: template
-    name: "Target grid exchange"
+    name: "${name} Target grid exchange"
     id: target_grid_exchange
     optimistic: True
     restore_value: True
