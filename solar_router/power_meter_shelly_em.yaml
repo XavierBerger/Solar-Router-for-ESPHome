@@ -41,6 +41,11 @@ script:
                 capture_response: true
                 on_response:
                   then:
+                    - logger.log:
+                        format: 'Response status: %d, Duration: %u ms'
+                        args:
+                          - response->status_code
+                          - response->duration_ms
                     - lambda: |-
                         json::parse_json(body, [](JsonObject root) -> bool {
                           id(real_power).publish_state(root["power"].as< float >());
