@@ -1,0 +1,11 @@
+# ----------------------------------------------------------------------------------------------------
+# When no counter want to be used, this counter alwars return 0
+# ----------------------------------------------------------------------------------------------------
+
+script:
+  - id: energy_saved_counter
+    mode: single
+    then:
+      - if:
+        then:
+          - lambda: return 0;
