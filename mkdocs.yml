@@ -20,6 +20,7 @@ nav:
   - Regulator:
       - Triac: triac.md
       - Relay: relay.md
+  - Energy Counter: energy_saved_counter.md
   - Engine: engine.md
   - Contributing: contributing.md
   - ChangeLog: changelog.md

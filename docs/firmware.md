@@ -7,6 +7,7 @@ Packages are :
 * **Power meters** : design to measure the energy exchanged with the grid.
 * **Regulator** : design to channel the surplus of energy to a designated load.
 * **Solar Router Engine** : design to determine how much of energy and when surplus of energy should be diverted to the load.
+* **Energy saved counter** : design to report the amount of energy dicvrted to the load (on daily bases).
 
 ## Packages
 
