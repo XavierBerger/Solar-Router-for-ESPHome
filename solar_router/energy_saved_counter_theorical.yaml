@@ -4,7 +4,7 @@
 
 # Define the power of load plugged on the solar router
 number:
-  platform: template
+  - platform: template
     name: "Load power"
     id: load_power
     min_value: 0
@@ -22,7 +22,8 @@ interval:
 
 # Sensor showing the actual energy saved consumption
 sensor:
-  - platform: total_daily_energy
+  - id: energy_saved
+    platform: total_daily_energy
     name: 'Total Daily Energy'
     power_id: energy_saved
     unit_of_measurement: 'kWh'
@@ -36,4 +37,4 @@ sensor:
 # Enable time component to reset energy at midnight
 time:
   - platform: homeassistant
-    id: homeassistant_time
+    id: homeassistant_time_for_solar_router
