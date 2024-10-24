@@ -1,0 +1,39 @@
+# ----------------------------------------------------------------------------------------------------
+# Calculate daily energy saved
+# ----------------------------------------------------------------------------------------------------
+
+# Define the power of load plugged on the solar router
+number:
+  platform: template
+    name: "Load power"
+    id: load_power
+    min_value: 0
+    max_value: 99999
+    step: 1
+    unit_of_measurement: "W"
+    optimistic: True
+    mode: slider
+
+# Calculate power saved bease on load power and regulator opening
+interval:
+  - interval: 30s
+    then:
+      lambda: id(energy_saved).publish_state(id(load_power).state*id(regulator_opening).state/100);
+
+# Sensor showing the actual energy saved consumption
+sensor:
+  - platform: total_daily_energy
+    name: 'Total Daily Energy'
+    power_id: energy_saved
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+# Enable time component to reset energy at midnight
+time:
+  - platform: homeassistant
+    id: homeassistant_time

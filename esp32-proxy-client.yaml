@@ -86,6 +86,8 @@ packages:
   power_meter:
     <<: !include solar_router/power_meter_proxy_client.yaml
   regulator:
-    <<: !include  solar_router/regulator_triac.yaml
+    <<: !include solar_router/regulator_triac.yaml
   solar_router:
-    <<: !include  solar_router/solar_router_engine.yaml
+    <<: !include solar_router/solar_router_engine.yaml
+  counter:
+    <<: !include solar_router/energy_saved_counter_theorical.yaml
