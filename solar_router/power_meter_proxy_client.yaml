@@ -6,7 +6,7 @@ sensor:
   # Sensor showing the actual power consumption
   - id: real_power
     platform: template
-    name: "Real Power"
+    name: "${name} Real Power"
     device_class: "power"
     unit_of_measurement: "W"
     update_interval: 1s
@@ -41,6 +41,11 @@ script:
                 max_response_buffer_size: 4096
                 on_response:
                   then:
+                    - logger.log:
+                        format: 'Response status: %d, Duration: %u ms'
+                        args:
+                          - response->status_code
+                          - response->duration_ms
                     - lambda: |-
                         json::parse_json(body, [](JsonObject root) -> bool {
                           id(real_power).publish_state(root["value"].as< float >());

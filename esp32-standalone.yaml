@@ -17,6 +17,7 @@ logger:
   level: INFO
   logs:
     component: ERROR
+    light: ERROR
 
 # Enable Home Assistant API
 api:
@@ -40,6 +41,10 @@ wifi:
 # Activate web interface
 web_server:
   port: 80
+
+# Define watchdog time (it should be greater than timeout)
+http_request:
+  watchdog_timeout: 12s
 
 # ----------------------------------------------------------------------------------------------------
 # Customisation
@@ -85,7 +90,7 @@ substitutions:
 #     file: solar_router/solar_router_engine.yaml
 #     refresh: 5s
 
-# Remove the following lines if you want to use the source from github
+# And Comment the following lines if you want to use the source from github
 packages:
   power_meter:
     <<: !include solar_router/power_meter_fronius.yaml
