@@ -2,11 +2,15 @@
 # Sensor updated every second to give feedback in Home Assistant
 # ----------------------------------------------------------------------------------------------------
 
+defaults:
+  sensor_id: "real_power"
+  sensor_name: "Real Power"
+
 sensor:
   # Sensor showing the actual power consumption
-  - id: real_power
+  - id: ${sensor_id}
     platform: template
-    name: "Real Power"
+    name: ${sensor_name}
     device_class: "power"
     unit_of_measurement: "W"
     update_interval: 1s
