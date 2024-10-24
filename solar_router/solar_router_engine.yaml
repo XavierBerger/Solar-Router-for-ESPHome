@@ -47,6 +47,7 @@ number:
     on_value:
       then:
         - script.execute: regulation_control
+        - script.execute: energy_saved_counter
         - if:
             condition:
               number.in_range:
@@ -141,6 +142,7 @@ time:
                           effect: fast
                     else:
                       - light.turn_on: yellow_led
+
       # Manage WiFi feedback with yellow LED
       - seconds: /5
         then:
