@@ -57,54 +57,19 @@ web_server:
 # ----------------------------------------------------------------------------------------------------
 # Customisation
 # ----------------------------------------------------------------------------------------------------
-
-# Uncomment the following lines if you want to use the source from github
-# substitutions:
-#   # Power meter source -----------------------------------------------------------
-#   # Define ip address of Power Meter (Fronius Inverter)
-#   power_meter_ip_address: "192.168.1.21"
-#
-#   # LEDs -------------------------------------------------------------------------
-#   # Green LED is reflecting regulation status
-#   # Yellow LED is reflecting power meter
-#   green_led_pin: GPIO32
-#   yellow_led_pin: GPIO33
-#
-#   # Regulator configuration ------------------------------------------------------
-#   # Define GPIO pin connected to mecanical relay.
-#   regulator_gate_pin: GPIO14
-#
-# packages:
-#   common:
-#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-#     file: solar_router/common.yaml
-#     refresh: 5s
-#   power_meter:
-#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-#     file: solar_router/power_meter_fronius.yaml
-#     refresh: 5s
-#   regulator:
-#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-#     file: solar_router/regulator_mecanical_relay.yaml
-#     refresh: 5s
-#   solar_router:
-#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-#     file: solar_router/engine_on_off.yaml
-#     refresh: 5s
-
 packages:
-  common: !include 
-    file: solar_router/common.yaml
-  power_meter: !include 
-    file: solar_router/power_meter_fronius.yaml
-    vars:
-      power_meter_ip_address: "192.168.1.21"
-  regulator: !include 
-    file: solar_router/regulator_mecanical_relay.yaml
-    vars:
-      regulator_gate_pin: GPIO14
-  solar_router: !include 
-    file: solar_router/engine_on_off.yaml
-    vars:
-      green_led_pin: GPIO32
-      yellow_led_pin: GPIO33
+  solar_router:
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    refresh: 1d
+    files:
+      - name: solar_router/common.yaml
+      - name: solar_router/power_meter_fronius.yaml
+        vars:
+          power_meter_ip_address: "192.168.1.21"
+      - name: solar_router/regulator_solid_state_relay.yaml
+        vars:
+          regulator_gate_pin: GPIO14
+      - name: solar_router/engine_on_off.yaml
+        vars:
+          green_led_pin: GPIO32
+          yellow_led_pin: GPIO33
