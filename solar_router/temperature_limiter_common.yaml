@@ -4,10 +4,10 @@
 #    then safety_limit is set to False
 # ... or the opposit if you want to use it for a cooling system
 esphome:
-    on_boot:
-      priority: -1000.0
-      then:
-        - script.execute: safety_limit_check
+  on_boot:
+    priority: -1000.0
+    then:
+      - script.execute: safety_limit_check
 
 globals:
   - id: used_for_cooling
@@ -67,6 +67,7 @@ script:
           if ( isnan( id(safety_temperature).state ) ){
               // Can't read temperature. Activatinf safety limit.
               id(safety_limit) = true;
+              id(red_led).turn_on();
               return;
           } 
           if(id(safety_limit))
@@ -97,7 +98,7 @@ script:
                   // Temperature has enough decreased we stop the cooling system
                   if (id(safety_temperature).state <= id(stop_temperature).state)
                   {
-                      // Limit is no more reached, regulation can restart
+                      // Limit is reached, stop regulation
                       id(safety_limit) = true;
                   }
               }
@@ -106,8 +107,24 @@ script:
                   // Temperature has enough increased we stop the heating system
                   if (id(safety_temperature).state >= id(stop_temperature).state)
                   {
-                      // Limit is no more reached, regulation can restart
+                      // Limit is reached, stop regulation
                       id(safety_limit) = true;
                   }
               }
           }
+          if ( id(safety_limit) )
+          {
+            id(red_led).turn_on();
+          }
+          else
+          {
+            id(red_led).turn_off();
+          }
+
+output:
+  - id: red_led
+    platform: gpio
+    pin: 
+      number: ${red_led_pin}
+      inverted: ${red_led_inverted}
+

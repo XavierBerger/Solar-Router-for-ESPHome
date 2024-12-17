@@ -1,6 +1,8 @@
 # ----------------------------------------------------------------------------------------------------
 # Define sensor for temperaturewer collection
 # ----------------------------------------------------------------------------------------------------
+substitutions:
+  red_led_inverted: "False"
 
 <<: !include temperature_limiter_common.yaml
 
