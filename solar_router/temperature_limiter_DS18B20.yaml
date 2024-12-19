@@ -1,8 +1,9 @@
-<<: !include temperature_limiter_common.yaml
-
 substitutions:
   DS18B20_address: "0"
   temperature_update_interval: 5s
+  red_led_inverted: "False"
+
+<<: !include temperature_limiter_common.yaml
 
 one_wire:
   - platform: gpio

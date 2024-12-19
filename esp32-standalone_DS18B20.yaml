@@ -78,6 +78,7 @@ substitutions:
   # Temperature sensor
   DS18B20_pin: GPIO13
   temperature_update_interval: 1s
+  red_led_pin: GPIO4
 
 # Uncomment the following lines if you want to use the source from github
 # packages:
