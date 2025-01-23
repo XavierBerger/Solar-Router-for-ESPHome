@@ -8,17 +8,12 @@ To use this package, add the following lines to your configuration file:
 packages:
   power_meter:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/power_meter_proxy.yaml
+    files:
+      - name: solar_router/power_meter_proxy.yaml
+        vars:
+          power_meter_ip_address: "192.168.1.30"
 ```
-
-This integration needs to know the IP address of the power meter proxy. This IP address has to be defined into `power_meter_ip_address` into `subtsitutions` section of your configuration as in example bellow:
-
-```yaml linenums="1"
-substitutions:
-  # Power meter source -----------------------------------------------------------
-  # Define ip address of Fronius inverter
-  power_meter_ip_address: "192.168.1.21"
-```
+This package needs to know the IP address of the inverter. This IP address has to be defined by `power_meter_ip_address` into `vars` section as show upper.
 
 This integration is activated/deactivated with a global variable `power_meter_activated`. This variable can be modified by a switch inside Home Assistant.
 
