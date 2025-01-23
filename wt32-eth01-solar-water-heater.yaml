@@ -111,3 +111,7 @@ packages:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     file: solar_router/temperature_limiter_DS18B20.yaml
     refresh: 1d
+  fan_control:
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/temperature_fan_control.yaml
+    refresh: 1d
