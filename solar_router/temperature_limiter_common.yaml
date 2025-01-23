@@ -65,7 +65,7 @@ script:
     then:
       - lambda: |-
           if ( isnan( id(safety_temperature).state ) ){
-              // Can't read temperature. Activatinf safety limit.
+              // Can't read temperature. Activating safety limit.
               id(safety_limit) = true;
               id(red_led).turn_on();
               return;
@@ -127,4 +127,5 @@ output:
     pin: 
       number: ${red_led_pin}
       inverted: ${red_led_inverted}
+
 
