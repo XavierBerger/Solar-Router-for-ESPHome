@@ -36,23 +36,18 @@ wifi:
 # ----------------------------------------------------------------------------------------------------
 # Customisation
 # ----------------------------------------------------------------------------------------------------
-
-substitutions:
-  # Power meter source -----------------------------------------------------------
-  # Define ip address of Shelly EM probe
-  power_meter_ip_address: "192.168.1.26:8000"
-  emeter_index: "0"
-
-  # LEDs -------------------------------------------------------------------------
-  # Yellow LED is reflecting power meter
-  yellow_led_pin: GPIO1
-
-  # power_meter_activated has to be set to 1 to activate the power measurment read
-  power_meter_activated_at_start: "1"
-
 packages:
-  power_meter:
+  solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/power_meter_shelly_em.yaml
     refresh: 1d
+    files:
+      - name: solar_router/common.yaml
+      - name: solar_router/power_meter_shelly_em.yaml
+        vars:
+          power_meter_activated_at_start: 1
+          power_meter_ip_address: "192.168.1.26:8000"
+          emeter_index: "0"
 
+
+http_request:
+  esp8266_disable_ssl_support: True

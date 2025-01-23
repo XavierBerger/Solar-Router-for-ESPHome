@@ -54,43 +54,21 @@ http_request:
 
 # This part of the script is designed to be use for customisation. It shouldn't be necessary to
 # edit other part of the script to perform configuration.
-
-substitutions:
-  # Power meter source -----------------------------------------------------------
-  # Define ip address of Power Meter (Fronius Inverter)
-  power_meter_ip_address: "192.168.1.21"
-
-
-  # Regulator --------------------------------------------------------------------
-  regulator: "ac_dimmer"
-
-  # Regulator configuration 
-  # Define GPIO pin connected to AC Dimmer for gate and zero crossing detection.
-  regulator_gate_pin: GPIO22
-  regulator_zero_crossing_pin: GPIO23
-
-  # LEDs -------------------------------------------------------------------------
-  # Green LED is reflecting regulation status
-  # Yellow LED is reflecting power meter status
-  green_led_pin: GPIO19
-  yellow_led_pin: GPIO18
-
-
 packages:
-  common:
+  solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/common.yaml
     refresh: 1d
-  power_meter:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/power_meter_fronius.yaml
-    refresh: 1d
-  regulator:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/regulator_triac.yaml
-    refresh: 1d
-  engine:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/engine.yaml
-    refresh: 1d
+    files: 
+      - name: solar_router/common.yaml
+      - name: solar_router/power_meter_fronius.yaml
+        vars:
+          power_meter_ip_address: "192.168.1.21"
+      - name: solar_router/regulator_triac.yaml
+        vars:
+          regulator_gate_pin: GPIO22
+          regulator_zero_crossing_pin: GPIO23
+      - name: solar_router/engine.yaml
+        vars:
+          green_led_pin: GPIO19
+          yellow_led_pin: GPIO18
 

@@ -52,16 +52,12 @@ To use this package, add the following lines to your configuration file:
 packages:
   engine:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/engine_on_off.yaml
+    files:
+      - name: solar_router/engine_on_off.yaml
+        vars:
+          green_led_pin: GPIO19
+          yellow_led_pin: GPIO18
 ```
 
-When this package is used it is required to define the following paramater is `substitution` section as show in the example bellow:
+When this package is used it is required to define `green_led_pin` and `green_led_pin` in `vars` section as show in the upper example.
 
-```yaml linenums="1"
-substitutions:
-  # LEDs -------------------------------------------------------------------------
-  # Green LED is reflecting regulation status
-  # Yellow LED is reflecting power meter status
-  green_led_pin: GPIO19
-  yellow_led_pin: GPIO18
-```

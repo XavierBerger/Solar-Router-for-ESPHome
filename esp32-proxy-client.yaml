@@ -48,35 +48,20 @@ web_server:
 
 # This part of the script is designed to be use for customisation. It shouldn't be necessary to
 # edit other part of the script to perform configuration.
-substitutions:
-  # Power meter source -----------------------------------------------------------
-  # Define ip address of Proxy Power Meter
-  power_meter_ip_address: "192.168.1.30"
-
-  # Regulator --------------------------------------------------------------------
-  regulator: "ac_dimmer"
-
-  # Regulator configuration 
-  # Define GPIO pin connected to AC Dimmer for gate and zero crossing detection.
-  regulator_gate_pin: GPIO22
-  regulator_zero_crossing_pin: GPIO23
-
-  # LEDs -------------------------------------------------------------------------
-  # Green LED is reflecting regulation status
-  # Yellow LED is reflecting power meter status
-  green_led_pin: GPIO19
-  yellow_led_pin: GPIO18
-
 packages:
-  power_meter:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/power_meter_proxy_client.yaml
-    refresh: 1d
-  regulator:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/regulator_solid_state_relay.yaml
-    refresh: 1d
   solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/engine.yaml
     refresh: 1d
+    files:
+      - name : solar_router/power_meter_proxy_client.yaml
+        vars:
+          power_meter_ip_address: "192.168.1.30"
+      - name : solar_router/regulator_solid_state_relay.yaml
+        vars:
+          regulator_gate_pin: GPIO22
+          regulator_zero_crossing_pin: GPIO23
+      - name : solar_router/engine.yaml
+        vars:
+          green_led_pin: GPIO19
+          yellow_led_pin: GPIO18
+
