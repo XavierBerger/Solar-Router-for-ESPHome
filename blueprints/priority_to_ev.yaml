@@ -114,8 +114,6 @@ action:
           - condition: numeric_state
             entity_id: !input energy_sent_to_grid
             above: !input excess_energy_threshold
-            for:
-              seconds: !input delay_before_deactivation
         sequence:
           - service: switch.turn_off
             target:
@@ -131,8 +129,6 @@ action:
           - condition: numeric_state
             entity_id: !input energy_sent_to_grid
             above: !input max_energy_sent
-            for:
-              seconds: !input delay_before_activation
         sequence:
           - service: switch.turn_on
             target:
