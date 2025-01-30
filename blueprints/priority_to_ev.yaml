@@ -91,16 +91,7 @@ trigger:
 
 action:
   - choose:
-      # Condition 1: Activate solar router when EV disconnected
-      - conditions:
-          - condition: state
-            entity_id: !input ev_connected
-            state: "off"
-        sequence:
-          - service: switch.turn_on
-            target:
-              entity_id: !input solar_router
-      # Condition 2: Deactivate solar router when EV need to be recharged
+     # Condition 1: Deactivate solar router when EV need to be recharged
       - conditions:
           - condition: state
             entity_id: !input ev_connected
@@ -118,7 +109,7 @@ action:
           - service: switch.turn_off
             target:
               entity_id: !input solar_router
-      # Condition 3: Reactivate solar router when EV battery is full
+      # Condition 2: Reactivate solar router when EV battery is full
       - conditions:
           - condition: state
             entity_id: !input ev_connected
@@ -133,3 +124,13 @@ action:
           - service: switch.turn_on
             target:
               entity_id: !input solar_router
+      # Condition 3: Activate solar router when EV disconnected
+      - conditions:
+          - condition: state
+            entity_id: !input ev_connected
+            state: "off"
+        sequence:
+          - service: switch.turn_on
+            target:
+              entity_id: !input solar_router
+      
