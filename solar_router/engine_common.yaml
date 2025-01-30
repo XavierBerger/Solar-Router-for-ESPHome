@@ -107,3 +107,11 @@ light:
             - state: False
               brightness: 100%
               duration: 250ms
+
+sensor:
+  - platform: template
+    name: "Regulator Opening Sensor"
+    id: regulator_opening_sensor
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: return id(regulator_opening).state;
