@@ -12,7 +12,11 @@ packages:
     file: solar_router/power_meter_home_assistant.yaml
 ```
 
-Ce package doit connaître le capteur à utiliser pour obtenir la consommation d'énergie. Il est attendu que ce capteur soit en Watts (W), qu'il soit positif (>0) lorsque l'électricité est consommée depuis le réseau et négatif (<0) lorsque l'électricité est envoyée au réseau. Ce capteur doit être défini par `main_power_sensor` dans la section `substitutions` de votre configuration, comme dans l'exemple ci-dessous :
+Ce package doit connaître le capteur à utiliser pour obtenir l'énergie échangée avec le réseau. Il est attendu que ce capteur soit en Watts (W), qu'il soit positif (>0) lorsque l'électricité est consommée depuis le réseau et négatif (<0) lorsque l'électricité est envoyée au réseau. 
+
+Ce *power meter* peut aussi mettre à disposition de votre routeur solaire la consommation utilisée par votre maison. Cela peut être nécessaire, par exemple, pour le calcul de l'énergie théorique reroutée.
+
+Le capteur déchange d'énergie avec le réseau doit être défini par `main_power_sensor` et la capteur de consommation par `consumption_sensor` dans la section `substitutions` de votre configuration, comme dans l'exemple ci-dessous :
 
 
 ```yaml linenums="1"
@@ -20,6 +24,7 @@ substitutions:
   # Power meter source -----------------------------------------------------------
   # Sensor in home assistant gathering the power consumption
   main_power_sensor: sensor.main_power
+  consumption_sensor: sensor.home_consumption
 ```
 
 !!! warning "Disponibilité des données et fréquence de rafraîchissement"

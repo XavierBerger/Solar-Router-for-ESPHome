@@ -11,7 +11,11 @@ packages:
     file: solar_router/power_meter_home_assistant.yaml
 ```
 
-This package needs to know the sensor to use to get the power consumption. It is expected for this sensor to be in Watt (W), to be positive (>0) when electricity is used from the grid and negative (<0) when electricity is sent to the grid. This sensor has to be defined by `main_power_sensor` into `subtsitutions` section of your configuration as in example ballow:
+This package needs to know which sensor to use to obtain the energy exchanged with the grid. It is expected that this sensor is in Watts (W), positive (>0) when electricity is consumed from the grid, and negative (<0) when electricity is sent to the grid.
+
+This power meter can also provide your solar router with the consumption used by your house. This may be necessary, for example, for calculating the theoretical diverted energy.
+
+The sensor for energy exchange with the grid should be defined by `main_power_sensor` and the consumption sensor by `consumption_sensor` in the `substitutions` section of your configuration, as shown in the example below.
 
 ```yaml linenums="1"
 substitutions:
