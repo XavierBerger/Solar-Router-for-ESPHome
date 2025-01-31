@@ -23,13 +23,13 @@ script:
           double diverted_energy = id(load_power).state*id(regulator_opening).state / 100;
           if (id(consumption).state >= diverted_energy or isnan(id(consumption).state)) 
           {
-              // Therorical energy diverted is consumed (or we don't know the consumption)
-              id(therorical_energy_diverted).publish_state(diverted_energy);
+              // Power diverted is consumed (or we don't know the consumption)
+              id(power_divertion).publish_state(diverted_energy);
           }
           else
           {
-              // Therorical energy diverted is not consumed
-              id(therorical_energy_diverted).publish_state(0.0);
+              // Power diverted is not consumed
+              id(power_divertion).publish_state(0.0);
           }
 
 
@@ -37,8 +37,8 @@ script:
 sensor:
   - id: energy_diverted
     platform: total_daily_energy
-    name: 'Energy diverted'
-    power_id: therorical_energy_diverted
+    name: 'Total energy diverted'
+    power_id: power_divertion
     unit_of_measurement: 'kWh'
     state_class: total_increasing
     device_class: energy
@@ -48,8 +48,8 @@ sensor:
       - multiply: 0.001
 
   - platform: template
-    name: Theorical energy diverted
-    id: therorical_energy_diverted
+    name: Power divertion
+    id: power_divertion
     unit_of_measurement: 'W'
 
 # Enable time component to 
