@@ -37,15 +37,15 @@ nav:
       - Home Assistant: temperature_limiter_home_assistant.md
       - DS18B20: temperature_limiter_DS18B20.md
   - Home Assistant:
+      - Blueprint for EV management: bleuprint_ev_management.md
       - Recorder configuration: recorder_configuration.md
   - About:
-    - ChangeLog: changelog.md
-    - License: license.md
+  - ChangeLog: changelog.md
+  - License: license.md
     - Contributing: contributing.md
     - compile_coverage.md
-    - Alternatives: alternatives.md
     - About the project: about.md
-
+    - Alternatives: alternatives.md
 
 theme:
   name: material
