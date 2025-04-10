@@ -42,9 +42,14 @@ jobs:
       run: tools/convert_to_local_source.py --ci esp8285-power-meter-proxy.yaml && esphome compile work_in_progress.yaml
       id: conf4
 
+    - name: Compile esp32-s3-power-meter-proxy.yaml
+      continue-on-error: true
+      run: tools/convert_to_local_source.py --ci esp32-s3-power-meter-proxy.yaml && esphome compile work_in_progress.yaml
+      id: conf5
+
     - name: Check for compile errors
       run: |
-        if [ ${{ steps.conf1.outcome }} == 'failure' ] || [ ${{ steps.conf2.outcome }} == 'failure' || ${{ steps.conf3.outcome }} == 'failure' ] || [ ${{ steps.conf4.outcome }} == 'failure']; then
+        if [ ${{ steps.conf1.outcome }} == 'failure' ] || [ ${{ steps.conf2.outcome }} == 'failure' || ${{ steps.conf3.outcome }} == 'failure' ] || [ ${{ steps.conf4.outcome }} == 'failure'] || [ ${{ steps.conf5.outcome }} == 'failure']; then
             echo "One or more compilations failed"
             exit 1
           fi
