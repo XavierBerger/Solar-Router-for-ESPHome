@@ -29,6 +29,8 @@ nav:
       - Overview: engine.md
       - 1 x dimmer: engine_1dimmer.md
       - 1 x dimmer + bypass: engine_1dimmer_1bypass.md
+      - 1 x dimmer + 2 x switches: engine_1dimmer_2switches.md
+      - 1 x dimmer + 2 x switches + bypass: engine_1dimmer_2switches_1bypass.md
       - 1 x switch: engine_1switch.md
   - Energy Counter: 
       - Theorical: energy_counter_theorical.md

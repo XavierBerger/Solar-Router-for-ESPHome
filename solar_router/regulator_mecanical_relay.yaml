@@ -2,19 +2,22 @@
 # Define scripts for energy divertion
 # ----------------------------------------------------------------------------------------------------
 
+substitutions:
+  relay_unique_id: "" # Allow to have multiple relays for engine_1dimmer_nswitches
+
 script:
   # Apply regulation on relay
-  - id: relay_regulation_control
+  - id: relay${relay_unique_id}_regulation_control
     mode: single
     then:
       lambda: |-
-        if (id(energy_divertion).state)
+        if (id(energy_divertion${relay_unique_id}).state)
         {
-          id(relay_output).turn_on();
+          id(relay${relay_unique_id}_output).turn_on();
         }
         else
         {
-          id(relay_output).turn_off();
+          id(relay${relay_unique_id}_output).turn_off();
         }
 
 # ----------------------------------------------------------------------------------------------------
@@ -24,7 +27,7 @@ script:
 # Control the relay through GPIO
 output:
   - platform: gpio
-    id: relay_output
+    id: relay${relay_unique_id}_output
     pin: 
       number: ${relay_regulator_gate_pin}
       inverted: true
