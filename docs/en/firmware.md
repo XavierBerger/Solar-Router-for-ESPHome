@@ -10,7 +10,8 @@ Packages are :
 * **Engine** : design to determine how much of energy and when surplus of energy should be diverted to the load.
 * **Regulator** : design to channel the surplus of energy to a designated load.
 * **Energy counter** : design to report the amount of energy diverted to the load.
-* **Temperature limiter**: design to stop the system when a temperature limit is reached
+* **Temperature limiter**: design to stop the system when a temperature limit is reached.
+* **Scheduler** : design to schedule automatisation.
 
 ## Packages
 

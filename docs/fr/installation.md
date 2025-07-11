@@ -60,6 +60,11 @@ Un **proxy** n'a besoin que d'un package **power meter**
 * [Compteur d'énergie théorique](energy_counter_theorical.md)  
   Calculer l'énergie économisée basée sur l'énergie détournée et la puissance de charge.
 
+#### Étape 2.5 : Ajouter un Planificateur (*Optionnel*)
+
+* [Planificateur de marche forcée](scheduler_forced_run.md)  
+  Stop le routeur solaire et force la puissance de charge entre une heure de début et de fin.
+
 ### Étape 3 : Configurer votre routeur solaire
 
 Chaque package nécessite une configuration qui se fait dans la section `substitution`.  

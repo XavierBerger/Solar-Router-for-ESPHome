@@ -62,6 +62,11 @@ A **proxy** just need 1 **power meter** package
 * [Energy Counter Theorical](energy_counter_theorical.md)  
   Calculate energy savec base on energy diverted and load power.
 
+#### Step 2.5 : Add a Scheduler (*Optionnel*)
+
+* [Scheduler Forced Run](scheduler_forced_run.md)  
+  Stop solar routing and force load power between begin and end hour.
+
 ### Step 3: Configure your solar router
 
 Each package requires a configuration which is done in `vars` section of `packages`.  

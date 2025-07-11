@@ -11,6 +11,7 @@ Les *packages* sont :
 * **Regulator** : conçu pour canaliser le surplus d'énergie vers une charge désignée.
 * **Energy counter** : conçu pour rapporter la quantité d'énergie détournée vers la charge.
 * **Temperature limiter** : conçu pour arrêter le système lorsqu'une limite de température est atteinte.
+* **Scheduler** : conçu pour planifier des automatisations.
 
 ## Packages
 
