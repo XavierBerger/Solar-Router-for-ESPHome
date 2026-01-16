@@ -21,3 +21,6 @@
 * power_meter_proxy_client.yaml
 * engine_1dimmer_1bypass.yaml
 * regulator_solid_state_relay.yaml
+
+## esp32-s3-power-meter-proxy
+* power_meter_enphase.yaml
