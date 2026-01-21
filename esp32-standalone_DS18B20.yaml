@@ -5,12 +5,12 @@
 esphome:
   name: solarrouter
   friendly_name: SolarRouter
-  min_version: 2025.3.2
+  min_version: 2026.1.0
 
 esp32:
   board: esp32dev
   framework:
-    type: arduino
+    type: esp-idf
 
 # Enable logging
 logger:
