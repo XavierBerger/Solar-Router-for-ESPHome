@@ -42,15 +42,15 @@ nav:
       - Overview: scheduler.md
       - Forced Run: scheduler_forced_run.md
   - Home Assistant:
+      - Blueprint Priority_to_EV: bleuprint_priority_to_ev.md
       - Recorder configuration: recorder_configuration.md
   - About:
-    - ChangeLog: changelog.md
-    - License: license.md
+  - ChangeLog: changelog.md
+  - License: license.md
     - Contributing: contributing.md
     - compile_coverage.md
-    - Alternatives: alternatives.md
     - About the project: about.md
-
+    - Alternatives: alternatives.md
 
 theme:
   name: material

@@ -1,4 +1,5 @@
-<<: !include power_meter_common.yaml
+packages:
+  - !include power_meter_common.yaml
 
 esphome:
   min_version: 2025.5.0
@@ -50,7 +51,7 @@ script:
                         } else {
 
                           bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
-                              if (!root.containsKey("power")) {
+                              if (!root["power"].is<JsonObject>()) {
                                   ESP_LOGW("custom", "Invalid JSON structure");
                                   return false;
                               }
@@ -74,8 +75,4 @@ time:
     on_time:
       - seconds: /1
         then:
-          - if:
-              condition:
-                - lambda: return id(power_meter_activated) != 0;
-              then:
-                - script.execute: power_meter_source
+          - script.execute: power_meter_source
