@@ -101,8 +101,10 @@ def process_yaml_file(yaml_file, fake_secrets):
     config = load_yaml_with_custom_constructors(yaml_file)
     if "solar_router" in config["packages"]:
         if "files" in config["packages"]["solar_router"]:
+            index=0
             for item in config["packages"]["solar_router"]["files"]:
-                package_name = get_package_name(item["path"])
+                index = index + 1
+                package_name = f'{get_package_name(item["path"])}{index}'
                 config["packages"][package_name] = IncludeTag(filename=item["path"])
                 if "vars" in item:
                     config["packages"][package_name].vars = item["vars"]
