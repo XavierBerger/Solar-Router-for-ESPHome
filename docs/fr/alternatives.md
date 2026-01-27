@@ -12,4 +12,4 @@ S'il ne répond pas entièrement à vos besoins, vous pouvez jeter un œil aux p
 * [PV-Routeur Solaire ESP Home](https://domo.rem81.com/index.php/2023/07/18/pv-routeur-solaire/) de **Remy**, Routeur solaire à base de ESPHome qui a aussi été source d'inspiration pour **Solar-Router-for-ESPHome**
 
 !!! note "Alternative manquante ?"
-    N'hésitez pas à ouvrir une issue sur [GitHub](https://github.com/XavierBerger/Solar-Router-for-ESPHome/issues) et je mettrai à jour cette page avec cette alternative.
+    N'hésitez pas à ouvrir une issue sur [GitHub](https://github.com/hacf-fr/Solar-Router-for-ESPHome/issues) et je mettrai à jour cette page avec cette alternative.
