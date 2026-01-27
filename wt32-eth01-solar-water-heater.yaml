@@ -5,12 +5,12 @@
 esphome:
   name: "solar-water-heater"
   friendly_name: "solar-water-heater"
-  min_version: 2025.3.2
+  min_version: 2026.1.0
 
 esp32:
   board: wt32-eth01
   framework:
-    type: arduino
+    type: esp-idf
 
 # Enable logging
 logger:
@@ -19,7 +19,6 @@ logger:
   logs:
     component: ERROR
     light: ERROR
-    http_request.arduino: ERROR
 
 # Enable Home Assistant API
 api:
