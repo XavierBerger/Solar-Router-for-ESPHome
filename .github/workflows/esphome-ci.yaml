@@ -65,9 +65,8 @@ jobs:
       - name: 🚀 Build ESPHome Binary
         uses: esphome/build-action@v6
         with:
-          yaml_file: ${{ matrix.file }}
+          yaml-file: ${{ matrix.file }}
           version: latest
-          dry-run: false
 
       # Décommente si tu veux récupérer les firmwares
       # - name: 📦 Upload firmware
