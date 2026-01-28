@@ -41,13 +41,13 @@ jobs:
           cat > secrets.yaml << 'EOF'
           wifi_ssid: "dummy"
           wifi_password: "dummy"
-          api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8=""
-          proxy_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8=""
-          solar_water_heater_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8=""
-          wt32_eth01_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8=""
-          solar_router_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8=""
-          solar_water_heater_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8=""
-          wt32_eth01_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8=""
+          api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          proxy_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          solar_water_heater_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          wt32_eth01_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          solar_router_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          solar_water_heater_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          wt32_eth01_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
           EOF
 
       - name: 💾 Cache PlatformIO & ESPHome
