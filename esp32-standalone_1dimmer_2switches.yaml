@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------
 
 esphome:
-  name: solarrouter
+  name: solarrouter-s2
   friendly_name: SolarRouter
   min_version: 2026.1.0
 
@@ -52,6 +52,9 @@ http_request:
 # ----------------------------------------------------------------------------------------------------
 # Customisation
 # ----------------------------------------------------------------------------------------------------
+
+# This part of the script is designed to be use for customisation. It shouldn't be necessary to
+# edit other part of the script to perform configuration.
 packages:
   solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
@@ -61,17 +64,19 @@ packages:
       - path: solar_router/power_meter_fronius.yaml
         vars:
           power_meter_ip_address: "192.168.1.21"
+      - path: solar_router/regulator_mecanical_relay.yaml
+        vars:
+          relay_regulator_gate_pin: GPIO14
+          relay_unique_id: "1"
+      - path: solar_router/regulator_mecanical_relay.yaml
+        vars:
+          relay_regulator_gate_pin: GPIO15
+          relay_unique_id: "2"
+      - path: solar_router/engine_1dimmer_2switches.yaml
+        vars:
+          green_led_pin: GPIO19
+          yellow_led_pin: GPIO18
       - path: solar_router/regulator_triac.yaml
         vars:
           regulator_gate_pin: GPIO22
           regulator_zero_crossing_pin: GPIO23
-      - path: solar_router/engine_1dimmer.yaml
-        vars:
-          green_led_pin: GPIO19
-          yellow_led_pin: GPIO18
-      - path: solar_router/energy_counter_theorical.yaml
-      - path: solar_router/temperature_limiter_DS18B20.yaml
-        vars:
-          DS18B20_pin: GPIO13
-          temperature_update_interval: 1s
-          red_led_pin: GPIO4

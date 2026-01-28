@@ -3,11 +3,14 @@
 **Solar Router for [ESPHome](http://esphome.io)** est conçu de manière modulaire pour faciliter la personnalisation avec différents compteurs de puissance et différents régulateurs.  
 Vous souhaitez contribuer ? Vous êtes les bienvenus et vous trouverez ci-dessous quelques recommandations pour le faire.
 
+!!! Tip "Astuce : Inspirez vous du code déjà développé aller plus vite."
+
+
 ## Développer un **Hardware**
 
-Vous pouvez proposer n'importe quel matériel selon vos besoins. Si ce nouveau matériel nécessite l'utilisation de GPIO, les broches utilisées par votre matériel doivent être configurées dans la section `substitution`.
+Vous pouvez proposer n'importe quel matériel selon vos besoins. Si ce nouveau matériel nécessite l'utilisation de GPIO, les broches utilisées par votre matériel doivent être configurées dans la section `vars` associée à votre package.
 
-Une documentation doit être ajoutée décrivant ce nouveau matériel et ses contraintes (Ex : capacités GPIO). Voir le chapitre [mettre à jour la documentation](#mettre-a-jour-la-documentation) ci-dessous.
+Une documentation doit être ajoutée décrivant ce nouveau matériel et ses contraintes (Ex : liste des GPIOs et utilisation). Voir le chapitre [mettre à jour la documentation](#mettre-a-jour-la-documentation) ci-dessous.
 
 ## Développer un **Package Logiciel**
 
@@ -23,6 +26,12 @@ Pour contribuer à **Solar Router for ESPHome**, développer une nouvelle foncti
     python -m venv venv
     source venv/bin/activate
     ```
+
+    !!! Tip "Go faster with Linux"
+        Add an alias to you venv :  
+        `echo "alias venv='. ~/.virtualenvs/python3/bin/activate'" >> ~/.bash_aliases `  
+        Reopen you console and call `venv` to activate you Python virtual environment.
+
 - Installer ESPHome CLI et autres dépendances :
     ```shell
     pip install -r requirements.txt
@@ -31,8 +40,14 @@ Pour contribuer à **Solar Router for ESPHome**, développer une nouvelle foncti
     ```shell
     esphome run my_configuration.yaml
     ```
-- Mettre à jour le code et pousser les modifications sur votre dépôt
-- Proposer une *pull request* depuis votre fork vers le dépôt officiel
+
+    !!! Tip "Astuce pour developper en local"
+        **Solar-Router-For-ESPHome** est conçu pour utilisé des fichier stocker sur GitHub.  
+        Le répertoire `tools` contient le script `convert_to_local_source.py` qui permet de convertir un fichier `yaml` pointant vers GitHub vers un fichier source avec le même nom et préfixé par `local_` et pointant sur les fichiers située dans le sous-répertoire `solar-router`.  
+        Ainsi, les modifications faites locallements seront prisent en compte immédiatement par la commande `esphome run local_<mon_fichier_yaml>`.
+
+- Une fois stabilisé, pousser les modifications sur votre dépôt
+- Et enfin, proposer une *pull request* depuis votre fork vers le dépôt officiel
 
 ### Développer un **Power Meter**
 
@@ -49,11 +64,9 @@ sensor:
     update_interval: 1s
 ```
 
-!!! tip "Astuce : Voir les compteurs de puissance déjà développés pour des exemples"
-
 Ce capteur est utilisé par les **Moteurs** pour obtenir la valeur de la puissance échangée avec le réseau.
 
-Si ce nouveau compteur de puissance nécessite une configuration spécifique, les paramètres requis doivent être ajoutés dans la section `substitution`.
+Si ce nouveau compteur de puissance nécessite une configuration spécifique, les paramètres requis doivent être ajoutés dans la section `vars` associée à votre package.
 
 Une documentation doit être ajoutée décrivant le compteur de puissance et comment le configurer. Voir le chapitre [mettre à jour la documentation](#mettre-a-jour-la-documentation) ci-dessous.
 
@@ -77,14 +90,12 @@ script:
           brightness: !lambda return id(regulator_opening).state/100.0;
 ```
 
-!!! tip "Astuce : Voir les régulateurs déjà développés pour des exemples"
-
 Vous pouvez développer un ou plusieurs régulateurs pour travailler ensemble dans le même système. Chaque régulateur doit :
 - Avoir son propre capteur de niveau allant de 0 à 100
 - Répondre aux changements du `router_level` global du système
 - Gérer sa logique de contrôle matériel spécifique
 
-Si ce nouveau compteur de puissance nécessite une configuration spécifique, les paramètres requis doivent être ajoutés dans la section `substitution`.
+Si ce nouveau compteur de puissance nécessite une configuration spécifique, les paramètres requis doivent être ajoutés dans la section `vars` associée à votre package.
 
 Une documentation doit être ajoutée décrivant le compteur de puissance et comment le configurer. Voir le chapitre [mettre à jour la documentation](#mettre-a-jour-la-documentation) ci-dessous.
 

@@ -1,0 +1,77 @@
+name: ESPHome Full Build CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Step 1 : List all .yaml files
+  list-files:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📄 Build matrix
+        id: set-matrix
+        run: |
+          # Liste les .yaml à la racine, exclut secrets.yaml
+          FILES=$(ls *.yaml | grep -v "secrets.yaml" | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=$FILES" >> "$GITHUB_OUTPUT"
+
+  # Step 2 : Compile files
+  build:
+    needs: list-files
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJson(needs.list-files.outputs.matrix) }}
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🤫 Create dummy secrets.yaml
+        run: |
+          cat > secrets.yaml << 'EOF'
+          wifi_ssid: "dummy"
+          wifi_password: "dummy"
+          api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          proxy_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          solar_water_heater_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          wt32_eth01_api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          solar_router_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          solar_water_heater_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          wt32_eth01_ota_password: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
+          EOF
+
+      - name: 💾 Cache PlatformIO & ESPHome
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio
+            .esphome
+          key: ${{ runner.os }}-esphome-${{ matrix.file }}-${{ hashFiles(matrix.file) }}
+          restore-keys: |
+            ${{ runner.os }}-esphome-${{ matrix.file }}-
+            ${{ runner.os }}-esphome-
+
+      - name: 🚀 Build ESPHome Binary
+        uses: esphome/build-action@v6
+        with:
+          yaml-file: ${{ matrix.file }}
+          version: latest
+
+      # Décommente si tu veux récupérer les firmwares
+      # - name: 📦 Upload firmware
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ matrix.file }}-firmware
+      #     path: .esphome/build/${{ matrix.file }}/**/firmware.bin
+      #     if-no-files-found: error
