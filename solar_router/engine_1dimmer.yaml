@@ -1,0 +1,156 @@
+# ----------------------------------------------------------------------------------------------------
+# User interaction
+# ----------------------------------------------------------------------------------------------------
+packages:
+  - !include engine_common.yaml
+
+switch:
+  # Define is router is active or not
+  # When switch is ON, pooling timer will trigger every seconds
+  - platform: template
+    name: "Activate Solar Routing"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    id: activate
+    on_turn_on:
+      then:
+        - lambda: |-
+            id(power_meter_activated) = 1;
+            id(green_led).turn_on();
+    on_turn_off:
+      then:
+        - light.turn_off: green_led
+        - number.to_min: router_level
+        - lambda: |- 
+            id(consumption).publish_state(NAN);
+            id(power_meter_activated) = 0;
+            id(real_power).publish_state(NAN);
+            id(router_level).publish_state(0);
+
+number:
+  # Router level from 0 to 100
+  # This value serves two purposes:
+  # 1. When solar routing is disabled: Acts as a manual control to set the router level
+  # 2. When solar routing is enabled: Automatically updated to reflect the current router level
+  #    Note: Manual adjustments via slider while routing is enabled are not recommended as they will be
+  #          immediately overridden by the solar router's automatic control
+  - platform: template
+    name: "Router Level"
+    id: router_level
+    min_value: 0
+    max_value: 100
+    step: 1
+    unit_of_measurement: "%"
+    optimistic: True
+    mode: slider
+    on_value:
+      then:
+        - number.set:
+            id: regulator_opening
+            value: !lambda return id(router_level).state;
+        - if:
+            condition:
+              number.in_range:
+                id: router_level
+                above: 1
+            then:
+              - light.turn_on:
+                  id: green_led
+                  effect: blink
+            else:
+              - light.turn_off: green_led
+              - if:
+                  condition:
+                    - switch.is_on: activate
+                  then:
+                    - light.turn_on: green_led
+  - platform: template
+    name: "Regulator Opening"
+    id: regulator_opening
+    min_value: 0
+    max_value: 100
+    step: 1
+    unit_of_measurement: "%"
+    optimistic: True
+    mode: slider
+    internal: ${hide_regulators}
+    on_value:
+      then:
+        - script.execute: regulation_control
+
+  # Define the reactivity of router level
+  - platform: template
+    name: "Up Reactivity" 
+    id: up_reactivity
+    optimistic: True
+    restore_value: True
+    mode: box
+    min_value: 1
+    max_value: 100
+    initial_value: 10
+    unit_of_measurement: ""
+    step: 1
+  - platform: template
+    name: "Down Reactivity"
+    id: down_reactivity
+    optimistic: True
+    restore_value: True
+    mode: box
+    min_value: 1
+    max_value: 100
+    initial_value: 10
+    unit_of_measurement: ""
+    step: 1
+
+  # Define the target level of grid exchange
+  #   0 : no exchange
+  #  <0 : continue the send energy to the grid
+  #  >0 : pull energy from the grid to better confort
+  - platform: template
+    name: "Target grid exchange"
+    id: target_grid_exchange
+    optimistic: True
+    restore_value: True
+    mode: box
+    min_value: -99999
+    max_value: 99999
+    initial_value: 0
+    unit_of_measurement: "W"
+    step: 1
+
+# ----------------------------------------------------------------------------------------------------
+# Define scripts for power collection or energy regulation
+# ----------------------------------------------------------------------------------------------------
+
+script:
+  # Manage energy regulation
+  # Calculate the delta of percentage to apply to the router level status to go closer to the
+  # objective. Closer we are to the objective smaller are the steps. Reactivity parameter is
+  # doing a ponderation on this parameter to avoid resonance effects.
+  - id: energy_regulation
+    mode: single
+    then:
+      # Define the reouter level based on power measured and grid exchange target
+      # The value of regulator is a precentage and is then limited to the range 0 100
+      - lambda: |-
+          if (isnan(id(real_power).state) or id(safety_limit)){
+            // If we can have information about grid exchange or if safety_limit is active, do not divert any energy
+            id(router_level).publish_state(0);
+            return;
+          }
+
+          // Calculate the power difference and adjust the regulator opening percentage
+          double real_power_state = id(real_power).state;
+          double target_grid_exchange_state = id(target_grid_exchange).state;
+          double reactivity_state = NAN;
+          if (real_power_state >= target_grid_exchange_state) {
+              reactivity_state = id(down_reactivity).state;
+          } else {
+              reactivity_state = id(up_reactivity).state;
+          }
+
+          double delta = -1*(real_power_state-target_grid_exchange_state)*reactivity_state/1000;
+          // Determine the new regulator status
+          double new_router_level = id(router_level).state + delta;
+          new_router_level = std::max(0.0, std::min(100.0, new_router_level));
+          id(router_level).publish_state(new_router_level);

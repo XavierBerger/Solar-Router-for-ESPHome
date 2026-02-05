@@ -1,0 +1,128 @@
+# ----------------------------------------------------------------------------------------------------
+# User interaction
+# ----------------------------------------------------------------------------------------------------
+
+globals:
+  # By default, if no temperature package is used, safety_limit is disabled
+  - id: safety_limit
+    type: bool
+    initial_value: "false"
+
+sensor:
+  - platform: copy
+    source_id: real_power
+    name: "Real Power Internal"
+    id: real_power_internal
+    internal: "True"
+    on_value:
+      then:
+        - logger.log: "Real power updated, run energy_regulation if activated"
+        - if:
+            condition:
+              switch.is_on: activate
+            then:
+              script.execute: energy_regulation
+
+substitutions:
+  # By default led are pin control is not inverted
+  green_led_inverted: "False"
+  yellow_led_inverted: "False"
+  # By default regulators are hidden
+  hide_regulators: "True"
+  # By default leds are hidden
+  hide_leds: "True"
+
+# Component managing time.
+# If activate switch is ON, yellow led update is performed every secondes
+time:
+  - platform: sntp
+    on_time:
+      # Trigger action every second
+      - seconds: /1
+        then:
+          - if:
+              condition:
+                switch.is_on: activate
+              then:
+                - light.turn_off: yellow_led
+                - if:
+                    condition:
+                      lambda: return id(real_power).state == NAN;
+                    then:
+                      # When NAN is returns, it means that an error occurs. Yellow LED blink fast
+                      - light.turn_on:
+                          id: yellow_led
+                          effect: fast
+                    else:
+                      - light.turn_on: yellow_led
+      # Manage WiFi feedback with yellow LED
+      - seconds: /5
+        then:
+          - light.turn_off: yellow_led
+          - if:
+              condition:
+                lambda: return network::is_connected();
+              then:
+                - light.turn_on: yellow_led
+              else:
+                - light.turn_on:
+                    id: yellow_led
+                    effect: blink
+
+# ----------------------------------------------------------------------------------------------------
+# LED Management
+# ----------------------------------------------------------------------------------------------------
+output:
+  - id: yellow_led_output
+    platform: gpio
+    pin:
+      number: ${yellow_led_pin}
+      inverted: ${yellow_led_inverted}
+
+  - id: green_led_output
+    platform: gpio
+    pin:
+      number: ${green_led_pin}
+      inverted: ${green_led_inverted}
+
+light:
+  - id: yellow_led
+    name: "Yellow Led"
+    platform: binary
+    output: yellow_led_output
+    internal: ${hide_leds}
+    effects:
+      - strobe:
+          name: blink
+          colors:
+            - state: True
+              brightness: 100%
+              duration: 250ms
+            - state: False
+              brightness: 100%
+              duration: 250ms
+      - strobe:
+          name: fast
+          colors:
+            - state: True
+              brightness: 100%
+              duration: 50ms
+            - state: False
+              brightness: 100%
+              duration: 50ms
+
+  - id: green_led
+    name: "Green Led"
+    platform: binary
+    output: green_led_output
+    internal: ${hide_leds}
+    effects:
+      - strobe:
+          name: blink
+          colors:
+            - state: True
+              brightness: 100%
+              duration: 250ms
+            - state: False
+              brightness: 100%
+              duration: 250ms

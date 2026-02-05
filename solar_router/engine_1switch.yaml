@@ -1,0 +1,220 @@
+# ----------------------------------------------------------------------------------------------------
+# User interaction
+# ----------------------------------------------------------------------------------------------------
+packages:
+  - !include engine_common.yaml
+
+switch:
+  # Define is router is active or not
+  # When switch is ON, activate power meter (each time power meter is updated the energy regulation will run)
+  # When switch is OFF, deactivate power meter, turn off divertion and reset counters
+  - platform: template
+    name: "Activate Solar Routing"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    id: activate
+    on_turn_on:
+      then:
+        - lambda: |-
+            id(power_meter_activated) = 1;
+            id(green_led).turn_on();
+    on_turn_off:
+      then:
+        - lambda: |- 
+            id(consumption).publish_state(NAN);
+            id(green_led).turn_off();
+            id(power_meter_activated) = 0;
+            id(real_power).publish_state(NAN);
+            id(router_level).publish_state(0);
+            id(start_tempo_counter).publish_state(NAN);
+            id(stop_tempo_counter).publish_state(NAN);
+
+  # Define if energy has to be diverted or not.
+  # Reset counter, manage router level (0 or 100) and manage LEDs
+  - platform: template
+    name: "Energy divertion"
+    id: energy_divertion
+    optimistic: True
+    internal: ${hide_regulators}
+    on_turn_on:
+      then:
+        - script.execute: relay_regulation_control
+    on_turn_off:
+      then:
+        - script.execute: relay_regulation_control
+
+number:
+  # Router level 0 OR 100
+  # This value serves two purposes:
+  # 1. When solar routing is disabled: Acts as a manual control to set the router level
+  # 2. When solar routing is enabled: Automatically updated to reflect the current router level
+  #    Note: Manual adjustments via slider while routing is enabled are not recommended as they will be
+  #          immediately overridden by the solar router's automatic control
+  - platform: template
+    id: router_level
+    name: "Router Level"
+    step: 100
+    min_value: 0
+    initial_value: 0
+    max_value: 100
+    unit_of_measurement: "%"
+    optimistic: True
+    on_value:
+      then:
+        - if:
+            condition:
+              number.in_range:
+                id: router_level
+                above: 1
+            then:
+              - switch.turn_on: energy_divertion
+              - lambda: |-
+                  id(start_tempo_counter).publish_state(NAN);
+                  id(stop_tempo_counter).publish_state(NAN);
+              - light.turn_on:
+                  id: green_led
+                  effect: blink
+            else:
+              - switch.turn_off: energy_divertion
+              - lambda: |-
+                  id(start_tempo_counter).publish_state(NAN);
+                  id(stop_tempo_counter).publish_state(NAN);
+              - light.turn_off: green_led
+              - if:
+                  condition:
+                    - switch.is_on: activate
+                  then:
+                    - light.turn_on: green_led
+  
+  # Define the power level to start divertion
+  - platform: template
+    name: "Start power level"
+    id: start_power_level
+    optimistic: True
+    restore_value: True
+    mode: box
+    min_value: 0
+    max_value: 999999
+    initial_value: 1200
+    unit_of_measurement: "W"
+    step: 1
+
+
+  # Define the tempo before closing the relay
+  - platform: template
+    name: "Start tempo"
+    id: start_tempo
+    optimistic: True
+    restore_value: True
+    mode: box
+    min_value: 0
+    max_value: 300
+    initial_value: 10
+    unit_of_measurement: "s"
+    step: 1
+
+  # Define the power level to stop divertion
+  - platform: template
+    name: "Stop power level"
+    id: stop_power_level
+    optimistic: True
+    restore_value: True
+    mode: box
+    min_value: 0
+    max_value: 999999
+    initial_value: 0
+    unit_of_measurement: "w"
+    step: 1
+
+  # Define the tempo before oprning the relay
+  - platform: template
+    name: "Stop tempo"
+    id: stop_tempo
+    optimistic: True
+    restore_value: True
+    mode: box
+    min_value: 0
+    max_value: 300
+    initial_value: 10
+    unit_of_measurement: "s"
+    step: 1
+
+sensor:
+  # Sensor tempo decreasing to 0 before starting divertion
+  - id: start_tempo_counter
+    platform: template
+    name: "Start tempo"
+    unit_of_measurement: "s"
+    update_interval: 1s
+  # Sensor tempo decreasing to 0 before stoping divertion
+  - id: stop_tempo_counter
+    platform: template
+    name: "Stop tempo"
+    unit_of_measurement: "s"
+    update_interval: 1s
+
+
+# ----------------------------------------------------------------------------------------------------
+# Define scripts for energy regulation
+# ----------------------------------------------------------------------------------------------------
+
+script:
+  # ...
+  - id: energy_regulation
+    mode: single
+    then:
+      # Energy export is negative
+      - lambda: |-
+          if (isnan(id(real_power).state) or id(safety_limit)){
+            // If we can have information about grid exchange or if safety_limit is active, do not divert any energy
+            id(router_level).publish_state(0);
+            return;
+          }
+          if (id(real_power).state < -id(start_power_level).state) 
+          {
+            // Energy divertion is needed
+            if ( id(router_level).state >= 100 ){
+              // Energy divertion is already done
+              id(start_tempo_counter).publish_state(NAN);
+              return;
+            }
+
+            id(stop_tempo_counter).publish_state(NAN);
+            if ( isnan(id(start_tempo_counter).raw_state) ){
+              id(start_tempo_counter).publish_state(id(start_tempo).state);
+            }
+
+            id(start_tempo_counter).publish_state(id(start_tempo_counter).state - 1);
+            if (id(start_tempo_counter).state <= 0)
+            {
+              id(router_level).publish_state(100);
+              id(start_tempo_counter).publish_state(NAN);
+            }
+            return;
+          }
+          if (id(real_power).state > -id(stop_power_level).state) 
+          {
+            // If energy divertion need to be stopped
+            if (id(router_level).state <= 0){
+              // Energy divertion is already stopped
+              id(stop_tempo_counter).publish_state(NAN);
+              return;
+            }
+
+            id(start_tempo_counter).publish_state(NAN);
+            if ( isnan(id(stop_tempo_counter).raw_state) ){
+              id(stop_tempo_counter).publish_state(id(stop_tempo).state);
+            }
+
+            id(stop_tempo_counter).publish_state(id(stop_tempo_counter).state - 1);
+            if (id(stop_tempo_counter).state <= 0)
+            {
+              id(router_level).publish_state(0);
+              id(stop_tempo_counter).publish_state(NAN);
+            }
+            return;
+          }
+          
+          id(start_tempo_counter).publish_state(NAN);
+          id(stop_tempo_counter).publish_state(NAN);
+ 

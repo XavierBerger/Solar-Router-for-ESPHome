@@ -1,0 +1,22 @@
+substitutions:
+  DS18B20_address: "0"
+  temperature_update_interval: 5s
+  red_led_inverted: "False"
+
+<<: !include temperature_limiter_common.yaml
+
+one_wire:
+  - platform: gpio
+    pin: ${DS18B20_pin}
+    id: dallas_d7
+
+sensor:
+  - platform: dallas_temp
+    id: safety_temperature
+    address: ${DS18B20_address}
+    one_wire_id: dallas_d7
+    name: safety_temperature
+    update_interval: ${temperature_update_interval}
+    on_value:
+      - script.execute:
+          id: safety_limit_check

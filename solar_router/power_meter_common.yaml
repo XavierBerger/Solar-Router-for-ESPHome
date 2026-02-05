@@ -1,0 +1,37 @@
+# ----------------------------------------------------------------------------------------------------
+# User interaction
+# ----------------------------------------------------------------------------------------------------
+
+substitutions:
+  power_meter_activated_at_start: "0"
+  power_sign: "1"
+  consumption_sensor_internal: "false"
+
+# Activate or not power meter
+globals:
+  - id: power_meter_activated
+    type: int
+    initial_value: ${power_meter_activated_at_start}
+    restore_value: True
+
+
+# ----------------------------------------------------------------------------------------------------
+# Sensor updated every second to give feedback in Home Assistant
+# ----------------------------------------------------------------------------------------------------
+sensor:
+  # Sensor showing the actual power on the grid
+  - id: real_power
+    platform: template
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+
+  # Sensor showing the actual power consumption
+  - id: consumption
+    platform: template
+    name: "Consumption"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+    internal: ${consumption_sensor_internal}
