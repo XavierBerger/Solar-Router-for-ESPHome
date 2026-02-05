@@ -2,7 +2,10 @@ site_name: Solar Router for ESPHome
 site_url: https://hacf-fr.github.io/Solar-Router-for-ESPHome
 
 theme:
-  name: material # Le thème "material" est propre et moderne
+  name: material 
 
 nav:
   - Accueil: index.md
+
+markdown_extensions:
+  - admonition
